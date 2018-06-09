@@ -24,13 +24,11 @@ while True:
 
     if data != '':
         nodeldrvalue = nmcuscale.GetValueUniversalScale(float(data))
-    else:
-        nodeldrvalue = nmcuscale.GetValueUniversalScale(float(0))
+        print ('NodeMCU Value ::: ',  nodeldrvalue, '\n')
 
     raspberryldrvalue = nmcuscale.GetValueUniversalScale(myldr.GetLDRCount())
     
-    print ('Node Value ',  nodeldrvalue, '\n')
-    print ('Rasp Value ',  raspberryldrvalue, '\n')
+    print ('Rasperry Value ::: ',  raspberryldrvalue, '\n')
     
     if (abs( nodeldrvalue - raspberryldrvalue ) < 4):
         conn.SendData(2, addr)
