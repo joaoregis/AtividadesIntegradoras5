@@ -4,12 +4,12 @@
 const char* ssid     = "AP";
 const char* password = "10203040";     
 int port = 555;
-char * ip = "192.168.43.107";
+char * ip = "192.168.43.161";
 
 WiFiUDP udp;
-char * data;
+char * data = "v";
 
-int sensorPin = A0;
+int sensorPin = D2;
 
 int myvalue = 0;
 int readedValue = 0;
@@ -18,6 +18,7 @@ int wifiStatus;
 
 void setup() {
 
+    pinMode(sensorPin, INPUT);
     pinMode(D4, OUTPUT);
 
     // 1 = Disable, 0 = Enable
@@ -49,44 +50,46 @@ void loop() {
     Serial.print("Status value: ");
     Serial.println(readedValue);
 
-    if (readedValue == 0) {
-      // desliga
-      digitalWrite(D4, HIGH);
-      delay(2000);
-    }
-    else if (readedValue == 1) {
-      // liga
-      digitalWrite(D4, LOW);
-      delay(2000);
-    }
-    else if (readedValue == 2) {
-      // pisca
-      digitalWrite(D4, LOW);
-      delay(250);
-      digitalWrite(D4, HIGH);
-      delay(250);
-      digitalWrite(D4, LOW);
-      delay(250);
-      digitalWrite(D4, HIGH);
-      delay(250);
-      digitalWrite(D4, LOW);
-      delay(250);
-      digitalWrite(D4, HIGH);
-      delay(250);
-      digitalWrite(D4, LOW);
-      delay(250);
-      digitalWrite(D4, HIGH);
-      delay(250);
-      digitalWrite(D4, LOW);
-      delay(250);
-      digitalWrite(D4, HIGH);
+    switch (data[0]) {
+    
+        case '%':
+          digitalWrite(D4, HIGH);
+          delay(2000);
+          break;
+          
+        case 'm':
+          digitalWrite(D4, LOW);
+          delay(2000);
+          break;
+          
+        case 's':
+          digitalWrite(D4, LOW);
+          delay(250);
+          digitalWrite(D4, HIGH);
+          delay(250);
+          digitalWrite(D4, LOW);
+          delay(250);
+          digitalWrite(D4, HIGH);
+          delay(250);
+          digitalWrite(D4, LOW);
+          delay(250);
+          digitalWrite(D4, HIGH);
+          delay(250);
+          digitalWrite(D4, LOW);
+          delay(250);
+          digitalWrite(D4, HIGH);
+          delay(250);
+          digitalWrite(D4, LOW);
+          delay(250);
+          digitalWrite(D4, HIGH);
+          break;
+      
     }
 }
 
-void do_sensor() {
-
-    myvalue = analogRead(sensorPin); 
-
+void do_sensor() 
+{
+    myvalue = analogRead(A0);
 }
 
 void do_connect() {
@@ -94,9 +97,7 @@ void do_connect() {
     wifiStatus = WiFi.status();
 
     if(wifiStatus == WL_CONNECTED) {
-
-        Serial.println("");
-        Serial.println("Your ESP is connected!");  
+         
         Serial.println("Your IP address is: ");
         Serial.println(WiFi.localIP());  
 
@@ -147,37 +148,5 @@ void do_listen() {
         Serial.println("");
         Serial.print("Received data: ");
         Serial.println(data);
-
-        Serial.println(data);
-
-        readedValue = atoi(data);
-
-        udp.flush();
     }
 }
-
-int toInt(char * str)
-{
-    int result;
-    int puiss;
-
-    result = 0;
-    puiss = 1;
-
-    while (('-' == (*str)) || ((*str) == '+'))
-    {
-        if (*str == '-')
-        puiss = puiss * -1;
-        str++;
-    }
-
-    while ((*str >= '0') && (*str <= '9'))
-    {
-      result = (result * 10) + ((*str) - '0');
-      str++;
-    }
-
-    return (result * puiss);
-}
-
-
